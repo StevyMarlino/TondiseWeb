@@ -1,0 +1,33 @@
+{
+  "translation": {
+    "projects": "Projets",
+    "subtitre": ">_ Salut !👋, Je suis",
+    "frontend": "Développeur Front-End",
+    "description": "Passionné des IT et du développement Frontend qui font partie de mon ADN. J'ai de très bonnes compétences dans le développement Web et mobile avec ReactJS, AngularJS, VueJS, HTML, CSS, Javascript, Flutter et bien d'autres.",
+    "followme": "Suivez-moi sur :",
+    "years": "_Années",
+    "exp": "d'expériences_",
+    "othershobbies": "Autres Loisirs:",
+    "music": "Musique",
+    "fitness": "Santé",
+    "football": "Football",
+    "spiritual": "Spiritualité",
+    "experiences": "Expériences",
+    "exptitre": "Chronologie des tâches éffectuées avec environnement utilisés",
+    "target": "Objectif",
+    "tools": "Outils",
+    "skills": "Compétences",
+    "skillstitre": "Pourcentage d'évolution des compétences",
+    "projectstitre": "Projets personnels réalisiés, UI/UX designs créés, application en production, etc.",
+    "link": "Lien externe",
+    "edutitre": "Diplômes, formations and certificats.",
+    "bachelordegree": "Licence en Informatique",
+    "built": "Projets développé par ",
+    "built2": " Utilisant React, Typescript, Shadcn, Vite, etc.",
+    "downdocx": "Télécharger le CV",
+    "theme": "Thème",
+    "noproject": "Toutes nos excuses pour la gène occasionnée, les projets démo seront disponibles à partir du",
+    "notext": " Octobre",
+    "aucun": "Aucun projet en cours pour le moment veuillez reéssayer plutard. Merci"
+  }
+}

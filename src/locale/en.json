@@ -1,0 +1,33 @@
+{
+    "translation": {
+      "projects": "Projects",
+      "subtitre": ">_ Hey there👋, I'm",
+      "frontend": "Front End Developer",
+      "description": "Passionate about IT and front-end development, which are part of my DNA. I have very good skills in web and mobile development with ReactJS, AngularJS, VueJS, HTML, CSS, Javascript, Flutter and many others.",
+      "followme": "Follow me on:",
+      "years": "_Years",
+      "exp": "Experiences_",
+      "othershobbies": "Others Hobbies:",
+      "music": "Music",
+      "fitness": "Fitness",
+      "football": "Football",
+      "spiritual": "Spiritual",
+      "experiences": "Experiences",
+      "exptitre": "Tasks performed Timeline with used environment",
+      "target": "Target",
+      "tools": "Tools",
+      "skills": "Skills",
+      "skillstitre": "Top level of my all my skills and percentage",
+      "projectstitre": "Personal projects done, UI/UX designs created, live apps, etc.",
+      "link": "External Link",
+      "edutitre": "Diploma, formations and certificates.",
+      "bachelordegree": "Bachelor Degree",
+      "built": "Projects built By",
+      "built2": " Using React, Typescript, Shadcn, Vite, etc.",
+      "downdocx": "Download Resume",
+      "theme": "Theme",
+      "noproject": "We apologize for any inconvenience caused. Demo projects will be available starting on",
+      "notext": " October",
+      "aucun": "No project at this time. Please try again later. Thank You"
+    }
+}
