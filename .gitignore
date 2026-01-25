@@ -27,3 +27,7 @@ yarn.lock
 *.sw?
 *.env
 node_modules
+TONDISE_SPECIFICATION.md
+CLAUDE.md
+LARAVEL_API_SPECIFICATION.md
+API_DOCUMENTATION.md
