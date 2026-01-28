@@ -54,7 +54,8 @@ export default function Login() {
       toast.success("Connexion réussie !");
       navigate("/");
     } catch (error: any) {
-      const message = error.response?.message || "Identifiants incorrects";
+      console.error("Login error:", error);
+      const message = error.response?.data?.message || "Identifiants incorrects";
       toast.error(message);
     } finally {
       setIsLoading(false);

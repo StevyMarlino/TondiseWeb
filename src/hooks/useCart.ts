@@ -62,7 +62,8 @@ export const useCart = () => {
 
   return {
     items: cartStore.items,
-    itemsCount: cartStore.itemsCount(),
+    itemsCount: cartStore.itemsCount(), // Nombre de produits distincts (ex: 2)
+    totalQuantity: cartStore.totalQuantity(), // Somme des quantités (ex: 8)
     subtotal: cartStore.subtotal(),
     discount: cartStore.discount(),
     total: cartStore.total(),

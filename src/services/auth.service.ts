@@ -15,19 +15,15 @@ interface RegisterRequest {
   password_confirmation: string;
 }
 
+// API response format: { user: {...}, token: "..." }
 interface AuthResponse {
-  success: boolean;
-  message: string;
-  data: {
-    user: User;
-    token: string;
-  };
+  user: User;
+  token: string;
 }
 
 export const authService = {
   async login(data: LoginRequest): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>('/auth/login', data);
-    // @ts-ignore
     return response.data;
   },
 
@@ -48,8 +44,8 @@ export const authService = {
   },
 
   async me(): Promise<User> {
-    const response = await api.get<{ success: boolean; data: User }>('/auth/me');
-    return response.data.data;
+    const response = await api.get<{ user: User }>('/auth/me');
+    return response.data.user;
   },
 
   async forgotPassword(email: string): Promise<void> {

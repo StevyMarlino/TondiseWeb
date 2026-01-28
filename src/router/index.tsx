@@ -12,6 +12,16 @@ import Product from "@/pages/Product";
 import Category from "@/pages/Category";
 import Cart from "@/pages/Cart";
 import { Login, Register, ForgotPassword } from "@/pages/Auth";
+import Checkout from "@/pages/Checkout";
+import CheckoutSuccess from "@/pages/Checkout/CheckoutSuccess";
+
+// Account pages
+import AccountDashboard from "@/pages/Account/Dashboard";
+import AccountOrders from "@/pages/Account/Orders";
+import AccountOrderDetail from "@/pages/Account/OrderDetail";
+import AccountAddresses from "@/pages/Account/Addresses";
+import AccountFavorites from "@/pages/Account/Favorites";
+import AccountSettings from "@/pages/Account/Settings";
 
 const routes = [
   {
@@ -39,6 +49,18 @@ const routes = [
       { path: "auth/login", element: <Login /> },
       { path: "auth/register", element: <Register /> },
       { path: "auth/forgot-password", element: <ForgotPassword /> },
+
+      // Checkout
+      { path: "checkout", element: <Checkout /> },
+      { path: "checkout/success", element: <CheckoutSuccess /> },
+
+      // Account
+      { path: "account", element: <AccountDashboard /> },
+      { path: "account/orders", element: <AccountOrders /> },
+      { path: "account/orders/:id", element: <AccountOrderDetail /> },
+      { path: "account/addresses", element: <AccountAddresses /> },
+      { path: "account/favorites", element: <AccountFavorites /> },
+      { path: "account/settings", element: <AccountSettings /> },
     ],
   },
   // Not found

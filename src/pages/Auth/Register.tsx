@@ -68,10 +68,11 @@ export default function Register() {
         password_confirmation: data.confirmPassword,
       });
 
-      login(response.data.user, response.data.token);
+      login(response.user, response.token);
       toast.success("Inscription réussie ! Bienvenue chez Tondisè.");
       navigate("/");
     } catch (error: any) {
+      console.error("Register error:", error);
       const message = error.response?.data?.message || "Erreur lors de l'inscription";
       toast.error(message);
     } finally {

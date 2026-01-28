@@ -9,7 +9,8 @@ export interface CartItem {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-  selectedOptions?: Record<string, string>;
+  selectedOptions?: Record<string, string>; // For display: { "Taille": "M" }
+  selectedOptionsApi?: Record<number, number>; // For API: { optionId: valueId }
   designId?: number;
 }
 
@@ -25,7 +26,8 @@ interface CartState {
   isOpen: boolean;
 
   // Computed
-  itemsCount: () => number;
+  itemsCount: () => number; // Nombre de produits distincts
+  totalQuantity: () => number; // Somme des quantités
   subtotal: () => number;
   discount: () => number;
   total: () => number;
@@ -48,7 +50,9 @@ export const useCartStore = create<CartState>()(
       promoCode: null,
       isOpen: false,
 
-      itemsCount: () => get().items.reduce((acc, item) => acc + item.quantity, 0),
+      itemsCount: () => get().items.length, // Nombre de produits distincts
+
+      totalQuantity: () => get().items.reduce((acc, item) => acc + item.quantity, 0), // Somme des quantités
 
       subtotal: () => get().items.reduce((acc, item) => acc + item.totalPrice, 0),
 

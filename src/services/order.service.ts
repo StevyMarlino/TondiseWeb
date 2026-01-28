@@ -1,5 +1,22 @@
 import api from '@/lib/axios';
 
+interface ApiOrder {
+  id: number;
+  order_number: string;
+  status: string;
+  status_label: string;
+  status_color: string;
+  payment_status: string;
+  shipping_method: string;
+  shipping_cost: string;
+  subtotal: string;
+  discount: string;
+  total: string;
+  promo_code: string | null;
+  tracking_number: string | null;
+  created_at?: string;
+}
+
 export interface Address {
   id: number;
   firstName: string;
@@ -12,17 +29,6 @@ export interface Address {
   isDefault: boolean;
 }
 
-export interface OrderItem {
-  id: number;
-  productId: number;
-  productName: string;
-  productImage: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  selectedOptions?: Record<string, string>;
-}
-
 export interface Order {
   id: number;
   orderNumber: string;
@@ -32,20 +38,34 @@ export interface Order {
     color: string;
   };
   paymentStatus: string;
-  items: OrderItem[];
-  shippingAddress: Address;
   shippingMethod: string;
   shippingCost: number;
   subtotal: number;
   discount: number;
   total: number;
-  promoCode?: string;
-  trackingNumber?: string;
-  createdAt: string;
-  paidAt?: string;
-  shippedAt?: string;
-  deliveredAt?: string;
+  promoCode?: string | null;
+  trackingNumber?: string | null;
+  createdAt?: string;
 }
+
+const mapOrder = (order: ApiOrder): Order => ({
+  id: order.id,
+  orderNumber: order.order_number,
+  status: {
+    value: order.status,
+    label: order.status_label,
+    color: order.status_color,
+  },
+  paymentStatus: order.payment_status,
+  shippingMethod: order.shipping_method,
+  shippingCost: Number(order.shipping_cost),
+  subtotal: Number(order.subtotal),
+  discount: Number(order.discount),
+  total: Number(order.total),
+  promoCode: order.promo_code,
+  trackingNumber: order.tracking_number,
+  createdAt: order.created_at,
+});
 
 export interface CreateOrderRequest {
   shipping_address_id: number;
@@ -57,66 +77,21 @@ export interface CreateOrderRequest {
 }
 
 export const orderService = {
-  async getOrders(): Promise<Order[]> {
-    const response = await api.get<{ success: boolean; data: Order[] }>('/orders');
-    return response.data.data;
+  async createOrder(data: CreateOrderRequest): Promise<Order> {
+    const response = await api.post<{
+      order: ApiOrder;
+      message: string;
+    }>('/orders', data);
+
+    if (!response.data?.order) {
+      throw new Error("Commande invalide retournée par l'API");
+    }
+
+    return mapOrder(response.data.order);
   },
 
   async getOrder(id: number): Promise<Order> {
-    const response = await api.get<{ success: boolean; data: Order }>(`/orders/${id}`);
-    return response.data.data;
-  },
-
-  async createOrder(data: CreateOrderRequest): Promise<Order> {
-    const response = await api.post<{ success: boolean; data: Order }>('/orders', data);
-    return response.data.data;
-  },
-
-  async cancelOrder(id: number): Promise<Order> {
-    const response = await api.post<{ success: boolean; data: Order }>(`/orders/${id}/cancel`);
-    return response.data.data;
-  },
-
-  async reorder(id: number): Promise<void> {
-    await api.post(`/orders/${id}/reorder`);
-  },
-
-  async getTracking(id: number): Promise<{ trackingNumber: string; status: string; events: Array<{ date: string; status: string; location: string }> }> {
-    const response = await api.get(`/orders/${id}/tracking`);
-    return response.data.data;
-  },
-};
-
-export const addressService = {
-  async getAddresses(): Promise<Address[]> {
-    const response = await api.get<{ success: boolean; data: Address[] }>('/addresses');
-    return response.data.data;
-  },
-
-  async createAddress(data: Omit<Address, 'id'>): Promise<Address> {
-    const response = await api.post<{ success: boolean; data: Address }>('/addresses', {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      address: data.address,
-      city: data.city,
-      postal_code: data.postalCode,
-      country: data.country,
-      phone: data.phone,
-      is_default: data.isDefault,
-    });
-    return response.data.data;
-  },
-
-  async updateAddress(id: number, data: Partial<Address>): Promise<Address> {
-    const response = await api.put<{ success: boolean; data: Address }>(`/addresses/${id}`, data);
-    return response.data.data;
-  },
-
-  async deleteAddress(id: number): Promise<void> {
-    await api.delete(`/addresses/${id}`);
-  },
-
-  async setDefault(id: number): Promise<void> {
-    await api.post(`/addresses/${id}/default`);
+    const response = await api.get<{ order: ApiOrder }>(`/orders/${id}`);
+    return mapOrder(response.data.order);
   },
 };

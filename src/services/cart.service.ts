@@ -1,64 +1,103 @@
 import api from '@/lib/axios';
-import { CartItem } from '@/stores/cartStore';
 
 export interface ApiCartItem {
   id: number;
-  productId: number;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  selectedOptions?: Record<string, string>;
-  designId?: number;
   product: {
     id: number;
     name: string;
-    mainImage: string;
+    slug: string;
+    short_description: string;
+    base_price: string;
+    main_image: string | null;
+    images: string[];
+    is_featured: boolean;
   };
+  quantity: number;
+  selected_options: number[];
+  design: any | null;
+  unit_price: string;
+  total_price: string;
 }
 
 export interface ApiCart {
   id: number;
   items: ApiCartItem[];
-  itemsCount: number;
-  subtotal: number;
+  items_count: number;
+  subtotal: string;
+  discount: string;
+  promo_code: string | null;
+  total: string;
 }
 
 export interface AddToCartRequest {
   product_id: number;
   quantity: number;
-  selected_options?: Record<string, number>;
-  design_id?: number;
+  selected_options?: Record<number, number>; // { optionId: valueId }
+  design_id?: number | null;
 }
 
 export const cartService = {
   async getCart(): Promise<ApiCart> {
-    const response = await api.get<{ success: boolean; data: ApiCart }>('/cart');
-    return response.data.data;
+    const response = await api.get('/cart');
+    return response.data.cart || response.data;
   },
 
   async addItem(data: AddToCartRequest): Promise<ApiCartItem> {
-    const response = await api.post<{ success: boolean; data: ApiCartItem }>('/cart/items', data);
-    return response.data.data;
+    const response = await api.post('/cart/items', data);
+    return response.data.item || response.data;
   },
 
   async updateItem(itemId: number, quantity: number): Promise<ApiCartItem> {
-    const response = await api.put<{ success: boolean; data: ApiCartItem }>(`/cart/items/${itemId}`, { quantity });
-    return response.data.data;
+    const response = await api.put(`/cart/items/${itemId}`, { quantity });
+    return response.data.item || response.data;
   },
 
   async removeItem(itemId: number): Promise<void> {
     await api.delete(`/cart/items/${itemId}`);
   },
 
-  async applyPromoCode(code: string): Promise<{ discount: number; promoCode: string }> {
-    const response = await api.post<{ success: boolean; data: { discount: number; promo_code: string } }>('/cart/promo', { code });
-    return {
-      discount: response.data.data.discount,
-      promoCode: response.data.data.promo_code,
-    };
+  async clearCart(): Promise<void> {
+    // Clear all items from cart
+    const cart = await this.getCart();
+    await Promise.all(cart.items.map(item => this.removeItem(item.id)));
   },
 
-  async removePromoCode(): Promise<void> {
-    await api.delete('/cart/promo');
+  async applyPromoCode(code: string): Promise<ApiCart> {
+    const response = await api.post('/cart/promo', { code });
+    return response.data.cart || response.data;
+  },
+
+  async removePromoCode(): Promise<ApiCart> {
+    const response = await api.delete('/cart/promo');
+    return response.data.cart || response.data;
+  },
+
+  // Sync local cart items to server cart
+  async syncLocalCart(localItems: Array<{
+    productId: number;
+    quantity: number;
+    selectedOptions?: Record<string, string>;
+  }>): Promise<ApiCart> {
+    // Clear server cart first
+    try {
+      await this.clearCart();
+    } catch (e) {
+      // Cart might already be empty
+    }
+
+    // Add all local items to server
+    for (const item of localItems) {
+      try {
+        await this.addItem({
+          product_id: item.productId,
+          quantity: item.quantity,
+          selected_options: [], // Options need to be IDs, local cart stores labels
+        });
+      } catch (e) {
+        console.error('Error syncing item:', e);
+      }
+    }
+
+    return this.getCart();
   },
 };

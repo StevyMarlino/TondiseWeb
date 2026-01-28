@@ -4,14 +4,14 @@ import { useAuthStore } from '@/stores/authStore';
 import { useNavigate } from 'react-router-dom';
 
 export const useAuth = () => {
-  const { user, isAuthenticated, login, logout, setLoading } = useAuthStore();
+  const { user, isAuthenticated, login, logout } = useAuthStore();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: (data) => {
-      login(data.data.user, data.data.token);
+      login(data.user, data.token);
       queryClient.invalidateQueries({ queryKey: ['cart'] });
       navigate('/');
     },
@@ -20,7 +20,7 @@ export const useAuth = () => {
   const registerMutation = useMutation({
     mutationFn: authService.register,
     onSuccess: (data) => {
-      login(data.data.user, data.data.token);
+      login(data.user, data.token);
       queryClient.invalidateQueries({ queryKey: ['cart'] });
       navigate('/');
     },
