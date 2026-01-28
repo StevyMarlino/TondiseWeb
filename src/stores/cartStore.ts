@@ -41,6 +41,7 @@ interface CartState {
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
+  clearCartSilently: () => void;
 }
 
 export const useCartStore = create<CartState>()(
@@ -111,6 +112,8 @@ export const useCartStore = create<CartState>()(
       },
 
       clearCart: () => set({ items: [], promoCode: null }),
+
+      clearCartSilently: () => set({ items: [], promoCode: null }),
 
       setPromoCode: (promoCode) => set({ promoCode }),
 

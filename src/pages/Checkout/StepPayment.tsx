@@ -14,6 +14,7 @@ import { usePaymentMethods } from "@/hooks/usePaymentMethods";
 import { orderService } from "@/services/order.service";
 import { paymentService, PaymentMethod } from "@/services/payment.service";
 import { MobileMoneyForm } from "@/components/payment/MobileMoneyForm";
+import {useCartStore} from "@/stores/cartStore";
 
 // Options de style pour CardElement
 const CARD_ELEMENT_OPTIONS = {
@@ -73,7 +74,8 @@ export function StepPayment({
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
-  const { clearCart, promoCode } = useCart();
+  const {  clearCart, promoCode } = useCart();
+  const { clearCartSilently } = useCartStore();
   const { methods, loading: loadingMethods, error: methodsError } = usePaymentMethods();
 
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
@@ -204,7 +206,7 @@ export function StepPayment({
       setPaymentStatus('success');
       toast.success("Paiement réussi !");
 
-      onCheckoutCompleted();
+      clearCartSilently();
 
       navigate(`/checkout/success?order=${order.orderNumber}`, {
         replace: true,
