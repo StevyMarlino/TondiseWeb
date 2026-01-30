@@ -94,4 +94,79 @@ export const orderService = {
     const response = await api.get<{ order: ApiOrder }>(`/orders/${id}`);
     return mapOrder(response.data.order);
   },
+  
+  async getOrders(): Promise<Order[]> {
+    const response = await api.get<{ data: ApiOrder[] }>('/orders');
+    const items = response.data?.data || [];
+    return items.map(mapOrder);
+  },
+
+  async cancelOrder(id: number) {
+    const response = await api.post(`/orders/${id}/cancel`);
+    return response.data;
+  },
+
+  async reorder(id: number) {
+    const response = await api.post(`/orders/${id}/reorder`);
+    // Certains endpoints retournent la nouvelle commande
+    if (response.data?.order) {
+      return mapOrder(response.data.order);
+    }
+    return response.data;
+  },
+};
+
+export const addressService = {
+  async getAddresses(): Promise<Address[]> {
+    const response = await api.get<{ data: any[] }>('/addresses');
+    const items = response.data?.data || [];
+    return items.map((a) => ({
+      id: a.id,
+      firstName: a.first_name || a.firstName || '',
+      lastName: a.last_name || a.lastName || '',
+      address: a.address || a.street || '',
+      city: a.city || '',
+      postalCode: a.postal_code || a.postalCode || '',
+      country: a.country || '',
+      phone: a.phone || a.phone_number || '',
+      isDefault: !!a.is_default,
+    }));
+  },
+
+  async createAddress(data: Omit<Address, 'id'>) {
+    const response = await api.post('/addresses', data);
+    const a = response.data?.address || response.data;
+    return {
+      id: a.id,
+      firstName: a.first_name || a.firstName || '',
+      lastName: a.last_name || a.lastName || '',
+      address: a.address || a.street || '',
+      city: a.city || '',
+      postalCode: a.postal_code || a.postalCode || '',
+      country: a.country || '',
+      phone: a.phone || a.phone_number || '',
+      isDefault: !!a.is_default,
+    };
+  },
+
+  async updateAddress(id: number, data: Partial<Address>) {
+    const response = await api.put(`/addresses/${id}`, data);
+    const a = response.data?.address || response.data;
+    return {
+      id: a.id,
+      firstName: a.first_name || a.firstName || '',
+      lastName: a.last_name || a.lastName || '',
+      address: a.address || a.street || '',
+      city: a.city || '',
+      postalCode: a.postal_code || a.postalCode || '',
+      country: a.country || '',
+      phone: a.phone || a.phone_number || '',
+      isDefault: !!a.is_default,
+    };
+  },
+
+  async deleteAddress(id: number) {
+    const response = await api.delete(`/addresses/${id}`);
+    return response.data;
+  },
 };

@@ -60,7 +60,8 @@ export const useCheckout = () => {
 
       // Étape 2: Créer le PaymentIntent
       setPaymentStatus('creating_intent');
-      const paymentIntent = await paymentService.createIntent(newOrder.id);
+      const paymentIntentResponse = await paymentService.createIntent(newOrder.id);
+      const paymentIntent = paymentIntentResponse.payment_intent;
 
       // Étape 3: Confirmer avec Stripe
       setPaymentStatus('processing');
